@@ -1,0 +1,6 @@
+.vscode
+.github/*
+!.github/workflows
+.env-dev
+.env
+.DS_Store

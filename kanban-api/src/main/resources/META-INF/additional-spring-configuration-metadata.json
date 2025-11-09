@@ -1,0 +1,14 @@
+{
+  "properties": [
+    {
+      "name": "app.jwt.secret",
+      "type": "java.lang.String",
+      "description": "JWTのシークレットキーです。"
+    },
+    {
+      "name": "app.jwt.expiration-ms",
+      "type": "java.lang.long",
+      "description": "トークンの有効期限の設定値(ms)です。"
+    }
+  ]
+}

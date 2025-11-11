@@ -1,4 +1,5 @@
 import type React from "react";
+import Input from "./Input";
 
 
 
@@ -15,10 +16,10 @@ export default function FormInput(props: {
       <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor={props.id}>
         {props.label}
       </label>
-      <input
+      <Input
         type={props.type}
         id={props.id}
-        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        value={props.value}
         onChange={props.onChange}
         required={props.required}
       />

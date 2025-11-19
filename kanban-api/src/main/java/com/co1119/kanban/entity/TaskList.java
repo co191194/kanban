@@ -23,8 +23,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "boards")
-public class Board {
+@Table(name = "task_lists")
+public class TaskList {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,19 +33,21 @@ public class Board {
     @Column(nullable = false)
     private String title;
 
-    // ユーザテーブルとの関係
+    @Column(nullable = false)
+    private Double orderIndex;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "board_id", nullable = false)
     @JsonIgnore
-    private User user;
+    private Board board;
 
-    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "taskList", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("orderIndex ASC")
-    private List<TaskList> taskLists = new ArrayList<>();
+    private List<Card> cards = new ArrayList<>();
 
-    public Board(String title, User user) {
+    public TaskList(String title, Double orderIndex, Board board) {
         this.title = title;
-        this.user = user;
+        this.orderIndex = orderIndex;
+        this.board = board;
     }
-
 }

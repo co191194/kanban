@@ -5,7 +5,7 @@ import com.co1119.kanban.entity.User;
 import lombok.Getter;
 
 @Getter
-public class RegisterResponse extends AbstractKanbanResponse {
+public class RegisterResponse extends AbstractResponse {
 
     private final Long userId;
     private final String userEmail;

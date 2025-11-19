@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class AuthResponse extends AbstractKanbanResponse {
+public class AuthResponse extends AbstractResponse {
     private final String accessToken;
     private final String tokenType = SecurityConst.TOKEN_TYPE;
 }

@@ -1,11 +1,7 @@
 package com.co1119.kanban.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -14,8 +10,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,8 +17,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "boards")
-public class Board {
+@Table(name = "cards")
+public class Card {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,19 +27,17 @@ public class Board {
     @Column(nullable = false)
     private String title;
 
-    // ユーザテーブルとの関係
+    @Column(nullable = false)
+    private Double orderIndex;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "task_list_id", nullable = false)
     @JsonIgnore
-    private User user;
+    private TaskList taskList;
 
-    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
-    @OrderBy("orderIndex ASC")
-    private List<TaskList> taskLists = new ArrayList<>();
-
-    public Board(String title, User user) {
+    public Card(String title, Double orderIndex, TaskList taskList) {
         this.title = title;
-        this.user = user;
+        this.orderIndex = orderIndex;
+        this.taskList = taskList;
     }
-
 }

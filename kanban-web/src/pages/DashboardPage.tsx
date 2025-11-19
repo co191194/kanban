@@ -1,14 +1,14 @@
 import Button from "@/components/Button";
 import Input from "@/components/Input";
+import { BOARD_API_ENDPOINT } from "@/consts/apiConstants";
 import type { Board } from "@/types/entity";
 import type { BoardRequest } from "@/types/request";
-import type { BoardCreateResponse, BoardSearchResponse } from "@/types/response";
+import type { BoardResponse } from "@/types/response";
 import apiClient from "@/utility/apiClient";
 import { AxiosError } from "axios";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
-const BOARDS_API_ENDPOINT = "/api/boards"
 
 export default function DashboardPage() {
   const navigate = useNavigate();
@@ -30,7 +30,7 @@ export default function DashboardPage() {
       setError("");
 
       try {
-        const response = apiClient.get<BoardSearchResponse>(BOARDS_API_ENDPOINT)
+        const response = apiClient.get<BoardResponse>(BOARD_API_ENDPOINT)
         setBoards((await response).data.boards)
       } catch (err) {
         console.error("ボードの取得に失敗しました：", err);
@@ -60,7 +60,7 @@ export default function DashboardPage() {
     if (!newBoardTitle.trim()) return;
 
     try {
-      const response = await apiClient.post<BoardCreateResponse>(BOARDS_API_ENDPOINT, {
+      const response = await apiClient.post<BoardResponse>(BOARD_API_ENDPOINT, {
         title: newBoardTitle
       } as BoardRequest);
 
@@ -112,12 +112,13 @@ export default function DashboardPage() {
       <section>
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {boards.map((board) => (
-            <div
+            <Link
+              to={`/board/${board.id}`}
               key={board.id}
               className="bg-white rounded-lg shadow-md p-6 h-32 hover:shadow-lg transition-shadow cursor-pointer"
             >
               <h2 className="text-xl font-semibold text-gray-900">{board.title}</h2>
-            </div>
+            </Link>
           ))}
         </div>
 

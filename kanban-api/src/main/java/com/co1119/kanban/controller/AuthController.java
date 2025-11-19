@@ -13,9 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.co1119.kanban.dto.request.LoginRequest;
 import com.co1119.kanban.dto.request.RegisterRequest;
-import com.co1119.kanban.dto.response.AbstractKanbanResponse;
+import com.co1119.kanban.dto.response.AbstractResponse;
 import com.co1119.kanban.dto.response.AuthResponse;
-import com.co1119.kanban.dto.response.ErrorResponse;
 import com.co1119.kanban.dto.response.RegisterResponse;
 import com.co1119.kanban.entity.User;
 import com.co1119.kanban.service.KanbanUserDetailsService;
@@ -36,13 +35,13 @@ public class AuthController {
     private final KanbanUserDetailsService kanbanUserDetailsService;
 
     @PostMapping("/register")
-    public ResponseEntity<? extends AbstractKanbanResponse> registerUser(@RequestBody RegisterRequest request) {
+    public ResponseEntity<? extends AbstractResponse> registerUser(@RequestBody RegisterRequest request) {
         try {
             User registerUser = userService.registerUser(request);
 
-            return ResponseUtility.createSuccessResponse(new RegisterResponse(registerUser));
+            return ResponseUtility.createCreatedReponse(new RegisterResponse(registerUser));
         } catch (RuntimeException e) {
-            return ResponseUtility.createBadRequestResponse(new ErrorResponse());
+            return ResponseUtility.createBadRequestResponse(e);
         }
     }
 

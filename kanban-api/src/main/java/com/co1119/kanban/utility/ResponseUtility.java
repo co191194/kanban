@@ -4,9 +4,31 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import com.co1119.kanban.constant.ProcessResult;
-import com.co1119.kanban.dto.response.AbstractKanbanResponse;
+import com.co1119.kanban.dto.response.AbstractResponse;
+import com.co1119.kanban.dto.response.ErrorResponse;
 
 public class ResponseUtility {
+
+    public static <T extends AbstractResponse> ResponseEntity<T> createOkResponse(T response) {
+        return createSuccessResponse(response, HttpStatus.OK);
+    }
+
+    public static <T extends AbstractResponse> ResponseEntity<T> createCreatedReponse(T response) {
+        return createSuccessResponse(response, HttpStatus.CREATED);
+    }
+
+    public static ResponseEntity<ErrorResponse> createBadRequestResponse(Exception e) {
+        return createErrorResponse(e, HttpStatus.BAD_REQUEST, ProcessResult.ERROR_BAD_REQUEST);
+    }
+
+    public static ResponseEntity<ErrorResponse> createForbbidenResponse(Exception e) {
+        return createErrorResponse(e, HttpStatus.FORBIDDEN, ProcessResult.ERROR_ACCESS_DNEY);
+    }
+
+    public static ResponseEntity<ErrorResponse> createNotFoundResponse(Exception e) {
+        return createErrorResponse(e, HttpStatus.NOT_FOUND, ProcessResult.ERROR_NOT_FOUND);
+    }
+
     /**
      * 正常終了時のレスポンスを作成します。
      * 
@@ -14,13 +36,21 @@ public class ResponseUtility {
      * @param response
      * @return
      */
-    public static <T extends AbstractKanbanResponse> ResponseEntity<T> createSuccessResponse(T response) {
+    private static <T extends AbstractResponse> ResponseEntity<T> createSuccessResponse(T response, HttpStatus status) {
         response.setProcessResult(ProcessResult.SUCCESS);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return ResponseEntity.status(status).body(response);
     }
 
-    public static <T extends AbstractKanbanResponse> ResponseEntity<T> createBadRequestResponse(T response) {
-        response.setProcessResult(ProcessResult.ERROR_BAD_REQUEST);
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    /**
+     * エラー終了時のレスポンスを作成します。
+     * 
+     * @param e
+     * @param status
+     * @param processResult
+     * @return
+     */
+    private static ResponseEntity<ErrorResponse> createErrorResponse(Exception e, HttpStatus status,
+            String processResult) {
+        return ResponseEntity.status(status).body(new ErrorResponse(processResult, e.getMessage()));
     }
 }

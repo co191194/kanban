@@ -6,4 +6,6 @@ public class ProcessResult {
     public static final String ERROR_VALIDATION = "ERROR_VALIDATION";
     public static final String ERROR_EXCLUSIVE = "ERROR_EXCLUSIVE";
     public static final String ERROR_SYSTEM = "ERROR_SYSTEM";
+    public static final String ERROR_ACCESS_DNEY = "ERROR_ACCESS_DNEY";
+    public static final String ERROR_NOT_FOUND = "ERROR_NOT_FOUND";
 }

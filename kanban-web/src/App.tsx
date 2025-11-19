@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import LoginPage from "@/pages/LoginPage";
 import RegisterPage from "@/pages/RegisterPage";
 import DashboardPage from "@/pages/DashboardPage";
+import BoardPage from "./pages/BoardPage";
 
 /**
  * 認証チェック用コンポーネント
@@ -34,7 +35,14 @@ function App() {
           }
         />
 
-        {/* 他の認証が必要なページもここに追加 (例: /board/:id) */}
+        <Route
+          path="/board/:boardId"
+          element={
+            <PrivateRoute>
+              <BoardPage />
+            </PrivateRoute>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );

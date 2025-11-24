@@ -15,6 +15,8 @@ export interface Card {
   id: number;
   title: string;
   orderIndex: number;
+  description?: string | null;
+  dueDate?: string | null; // yyyy-MM-dd
 }
 
 /**

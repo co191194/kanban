@@ -1,5 +1,5 @@
 import { BOARD_API_ENDPOINT, CARD_API_ENDPOINT, LIST_API_ENDPOINT } from "@/consts/apiConstants";
-import type { Board, TaskList } from "@/types/entity";
+import type { Board, Card, TaskList } from "@/types/entity";
 import type { BoardResponse } from "@/types/response";
 import apiClient from "@/utility/apiClient";
 import { AxiosError } from "axios";
@@ -10,6 +10,7 @@ import TaskListComponent from "@/components/TaskListComponent";
 import CreateItemForm from "@/components/CreateItemForm";
 import { calcNewOrderIndex } from "@/utility/orderUtility";
 import type { CardMoveRequest, ListMoveRequest } from "@/types/request";
+import CardDetailModal from "@/components/CardDetailModal";
 
 export default function BoardPage() {
   // URLパラメータを取得
@@ -20,6 +21,7 @@ export default function BoardPage() {
   const [error, setError] = useState<string>("");
 
   const [isAddingList, setAddingList] = useState(false);
+  const [selectedCard, setSelectedCard] = useState<Card | null>(null);
 
   useEffect(() => {
     if (!boardId) return;
@@ -237,6 +239,62 @@ export default function BoardPage() {
     }
   }
 
+  /**
+   * カードのクリックイベント
+   * @param card 
+   */
+  const handleCardClicked = (card: Card) => {
+    setSelectedCard(card);
+  };
+
+  /**
+   * カードの更新イベント
+   * @param updatedCard 更新されたカード
+   */
+  const handleCardUpdate = (updatedCard: Card) => {
+    if (!board) return;
+
+    // Board state 内の古い card を、新しい (更新された) card に置き換える
+    const newLists = board.taskLists.map<TaskList>(list => {
+      // 更新されたカードがこのリストにあるか
+      const cardIndex = list.cards.findIndex(card => card.id === updatedCard.id);
+      if (cardIndex === -1) return list;
+
+      // あった場合は、新しい card に置き換える
+      const newCards = [...list.cards];
+      newCards[cardIndex] = updatedCard;
+      return {
+        ...list,
+        cards: newCards,
+      };
+    });
+
+    setBoard({
+      ...board,
+      taskLists: newLists,
+    });
+  };
+
+  /**
+   * カードの削除イベント
+   * @param cardId 削除するカードの ID
+   */
+  const handleCardDelete = (cardId: number) => {
+    if (!board) return;
+
+    // Board state 内の古い card を、新しい (更新された) card に置き換える
+    const newLists = board.taskLists.map<TaskList>(list => ({
+      ...list,
+      cards: list.cards.filter(card => card.id !== cardId)
+    }));
+
+    setBoard({
+      ...board,
+      taskLists: newLists,
+    });
+  };
+
+
   // レンダリング
   if (isLoading) {
     return <div className="p-8 text-white">読み込み中...</div>;
@@ -275,6 +333,7 @@ export default function BoardPage() {
                   list={list}
                   index={index}
                   onCardAdded={handleCardAdded}
+                  onCardClicked={handleCardClicked}
                 />
               ))}
               {provided.placeholder} {/* ドロップエリアの拡張用 */}
@@ -302,7 +361,14 @@ export default function BoardPage() {
           )}
         </Droppable>
 
-        {/* (TODO: リスト追加ボタンをここに追加) */}
+        {selectedCard && (
+          <CardDetailModal
+            card={selectedCard}
+            onClose={() => setSelectedCard(null)}
+            onUpdate={handleCardUpdate}
+            onDelete={handleCardDelete}
+          />
+        )}
       </div>
 
     </DragDropContext>

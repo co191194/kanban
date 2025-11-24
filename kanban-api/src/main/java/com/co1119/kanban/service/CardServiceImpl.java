@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.co1119.kanban.dto.request.CardMoveRequest;
+import com.co1119.kanban.dto.request.CardUpdateRequest;
 import com.co1119.kanban.entity.Card;
 import com.co1119.kanban.entity.TaskList;
 import com.co1119.kanban.entity.User;
@@ -39,6 +40,25 @@ public class CardServiceImpl implements CardService {
         card.setTaskList(newTaskList);
         card.setOrderIndex(request.getNewOrderIndex());
         return cardRepository.save(card);
+    }
+
+    @Override
+    @Transactional
+    public Card updateCard(Long cardId, CardUpdateRequest request) {
+        Card card = cardRepository.findById(cardId).orElseThrow(() -> new RuntimeException("カードが見つかりません"));
+
+        card.setTitle(request.getTitle());
+        card.setDescription(request.getDescription());
+        card.setDueDate(request.getDueDate());
+        return cardRepository.save(card);
+    }
+
+    @Override
+    @Transactional
+    public Card deleteCard(Long cardId) {
+        Card card = cardRepository.findById(cardId).orElseThrow(() -> new RuntimeException("カードが見つかりません"));
+        cardRepository.delete(card);
+        return card;
     }
 
 }

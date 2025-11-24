@@ -19,3 +19,9 @@ export interface CardMoveRequest {
   newTaskListId: number;
   newOrderIndex: number;
 }
+
+export interface CardUpdateRequest {
+  title: string;
+  description?: string;
+  dueDate?: string;
+}

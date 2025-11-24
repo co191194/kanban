@@ -1,5 +1,5 @@
 import { LIST_API_ENDPOINT } from "@/consts/apiConstants";
-import type { TaskList } from "@/types/entity";
+import type { Card, TaskList } from "@/types/entity";
 import type { CardResponse } from "@/types/response";
 import apiClient from "@/utility/apiClient";
 import { Draggable, Droppable } from "@hello-pangea/dnd";
@@ -11,12 +11,14 @@ interface TaskListProps {
   list: TaskList;
   index: number;
   onCardAdded: (updatedList: TaskList) => void;
+  onCardClicked: (card: Card) => void;
 }
 
 function TaskListComponent({
   list,
   index,
-  onCardAdded
+  onCardAdded,
+  onCardClicked
 }: TaskListProps) {
   const [isAddingCard, setAddingCard] = useState(false);
   const [error, setError] = useState("");
@@ -67,7 +69,12 @@ function TaskListComponent({
                 style={{ minHeight: '50px', maxHeight: 'calc(100vh - 200px)', overflowY: 'auto' }}
               >
                 {list.cards.map((card, index) => (
-                  <CardComponent key={card.id} card={card} index={index} />
+                  <CardComponent
+                    key={card.id}
+                    card={card}
+                    index={index}
+                    onClick={onCardClicked}
+                  />
                 ))}
                 {provided.placeholder}
               </div>

@@ -1,5 +1,7 @@
 package com.co1119.kanban.entity;
 
+import java.time.LocalDate;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
@@ -29,6 +31,12 @@ public class Card {
 
     @Column(nullable = false)
     private Double orderIndex;
+
+    @Column(length = 1000)
+    private String description;
+
+    @Column
+    private LocalDate dueDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "task_list_id", nullable = false)
